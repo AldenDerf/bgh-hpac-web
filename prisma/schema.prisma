@@ -32,6 +32,7 @@ model User {
   awards     Award[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
+  requiresPasswordChange Boolean @default(false) @map("requires_password_change")
 
   @@map("USER")
 }

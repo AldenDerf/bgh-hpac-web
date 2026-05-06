@@ -20,6 +20,12 @@ export async function proxy(request: NextRequest) {
     try {
       const payload = await decrypt(session);
       const userType = payload.user.userType;
+      const requiresPasswordChange = payload.user.requiresPasswordChange;
+
+      // Force password change if required
+      if (requiresPasswordChange && pathname !== "/change-password") {
+        return NextResponse.redirect(new URL("/change-password", request.url));
+      }
 
       // Admin can access everything
       if (userType === "ADMIN" || isHealthWorkerWeekRoute) {
@@ -66,5 +72,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/hpac/:path*", "/employee/:path*", "/health_worker_week_2026/:path*", "/login"],
+  matcher: ["/admin/:path*", "/hpac/:path*", "/employee/:path*", "/health_worker_week_2026/:path*", "/login", "/change-password"],
 };

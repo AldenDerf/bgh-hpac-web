@@ -32,16 +32,18 @@ export default function AdminPage() {
               </div>
             </Link>
 
-            {/* User Management Placeholder */}
-            <div className="bg-white p-8 rounded-3xl shadow-md border border-slate-100 opacity-60 grayscale cursor-not-allowed">
-              <div className="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mb-6">
-                <span className="text-3xl">👥</span>
+            {/* User Management */}
+            <Link href="/admin/users" className="group">
+              <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 hover:border-blue-200 transition-all duration-300 h-full">
+                <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">👥</span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">User Management</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  Audit system access, manage roles, and monitor hospital personnel account security.
+                </p>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">User Management</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Audit system access, manage roles, and monitor hospital personnel account security.
-              </p>
-            </div>
+            </Link>
           </div>
         </div>
       </main>

@@ -57,6 +57,7 @@ export async function POST(request: Request) {
       id: employee.user?.id,
       employeeId: employee.employeeId,
       userType: userType,
+      requiresPasswordChange: employee.user?.requiresPasswordChange || false,
     });
 
     return NextResponse.json({ success: true, redirect });
