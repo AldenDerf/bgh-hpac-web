@@ -6,8 +6,9 @@ import { cookies } from "next/headers";
 // PATCH award status (ADMIN only)
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const session = cookieStore.get("session")?.value;
 
@@ -30,7 +31,7 @@ export async function PATCH(
     }
 
     const award = await prisma.award.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     });
 
