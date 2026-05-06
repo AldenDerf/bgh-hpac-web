@@ -22,14 +22,29 @@ interface Award {
 
 export default function AdminAwardsApprovalPage() {
   const [pendingAwards, setPendingAwards] = useState<Award[]>([]);
+  const [counts, setCounts] = useState({ approved: 0, rejected: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const fetchPendingAwards = async () => {
+  const fetchAwardsData = async () => {
     try {
-      const res = await fetch("/api/awards?status=PENDING");
-      const data = await res.json();
-      setPendingAwards(data);
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        fetch("/api/awards?status=PENDING"),
+        fetch("/api/awards?status=APPROVED"),
+        fetch("/api/awards?status=REJECTED"),
+      ]);
+      
+      const [pending, approved, rejected] = await Promise.all([
+        pendingRes.json(),
+        approvedRes.json(),
+        rejectedRes.json(),
+      ]);
+
+      setPendingAwards(pending);
+      setCounts({
+        approved: approved.length,
+        rejected: rejected.length,
+      });
     } catch (error) {
       console.error("Failed to fetch awards:", error);
     } finally {
@@ -38,7 +53,7 @@ export default function AdminAwardsApprovalPage() {
   };
 
   useEffect(() => {
-    fetchPendingAwards();
+    fetchAwardsData();
   }, []);
 
   const handleStatusUpdate = async (id: string, status: "APPROVED" | "REJECTED") => {
@@ -67,6 +82,25 @@ export default function AdminAwardsApprovalPage() {
         <div className="max-w-4xl mx-auto">
           <Breadcrumbs />
           <BackButton />
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pending</p>
+              <h4 className="text-2xl font-black text-blue-600">{pendingAwards.length}</h4>
+            </div>
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Authorized</p>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <h4 className="text-2xl font-black text-slate-900">{counts.approved}</h4>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Archived/Rejected</p>
+              <h4 className="text-2xl font-black text-slate-300">{counts.rejected}</h4>
+            </div>
+          </div>
           
           <header className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
