@@ -25,6 +25,8 @@ export default function AdminUserManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
+  const [roleSelectionEmployee, setRoleSelectionEmployee] = useState<Employee | null>(null);
+
   const fetchEmployees = async () => {
     try {
       const res = await fetch("/api/admin/employees");
@@ -42,8 +44,6 @@ export default function AdminUserManagement() {
   }, []);
 
   const handleRoleToggle = async (employeeId: string, currentRole?: string) => {
-    const newRole = currentRole ? null : "HPAC_MEMBER"; // Default promotion to HPAC
-    
     if (currentRole) {
       // Demote
       if (confirm("Remove administrative access for this user?")) {
@@ -52,18 +52,22 @@ export default function AdminUserManagement() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ employeeId }),
         });
+        fetchEmployees();
       }
     } else {
-      // Promote
-      const role = prompt("Enter role (ADMIN or HPAC_MEMBER):", "HPAC_MEMBER");
-      if (role === "ADMIN" || role === "HPAC_MEMBER") {
-        await fetch("/api/admin/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ employeeId, userType: role }),
-        });
-      }
+      // Open our new custom role selection modal
+      const employee = employees.find(e => e.employeeId === employeeId);
+      if (employee) setRoleSelectionEmployee(employee);
     }
+  };
+
+  const assignRole = async (employeeId: string, role: string) => {
+    await fetch("/api/admin/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ employeeId, userType: role }),
+    });
+    setRoleSelectionEmployee(null);
     fetchEmployees();
   };
 
@@ -248,6 +252,60 @@ export default function AdminUserManagement() {
                 <button type="submit" className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-600 transition-all">Save Record</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Role Selection Modal */}
+      {roleSelectionEmployee && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[3rem] w-full max-w-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-10 sm:p-14">
+              <header className="text-center mb-12">
+                <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-2">Promotion Manager</p>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Assign Access Role</h2>
+                <p className="text-slate-500 font-medium mt-2">Choose the administrative level for <b>{roleSelectionEmployee.firstname} {roleSelectionEmployee.lastname}</b></p>
+              </header>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Admin Option */}
+                <button 
+                  onClick={() => assignRole(roleSelectionEmployee.employeeId, "ADMIN")}
+                  className="group p-8 bg-slate-50 rounded-[2.5rem] border-2 border-transparent hover:border-purple-500 hover:bg-purple-50 transition-all text-left"
+                >
+                  <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                      <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516 11.209 11.209 0 0 1-7.877-3.08z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h4 className="font-black text-slate-900 mb-1">System Admin</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">Full access to users, awards, and system settings.</p>
+                </button>
+
+                {/* HPAC Option */}
+                <button 
+                  onClick={() => assignRole(roleSelectionEmployee.employeeId, "HPAC_MEMBER")}
+                  className="group p-8 bg-slate-50 rounded-[2.5rem] border-2 border-transparent hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                >
+                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                      <path d="M11.644 1.59a.75.75 0 0 1 .712 0l9.75 5.25a.75.75 0 0 1 0 1.32l-9.75 5.25a.75.75 0 0 1-.712 0l-9.75-5.25a.75.75 0 0 1 0-1.32l9.75-5.25Z" />
+                      <path d="m3.265 10.602 7.667 4.128a1.25 1.25 0 0 0 1.136 0l7.667-4.128A9.015 9.015 0 0 1 21 12.013V17.5a.75.75 0 0 1-1.5 0v-4.582l-6.792 3.658a2.75 2.75 0 0 1-2.416 0L3.5 12.918v4.582a.75.75 0 0 1-1.5 0v-5.487c0-.311.16-.599.425-.77l.84-.541Z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-black text-slate-900 mb-1">HPAC Member</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">Can propose award categories and view event results.</p>
+                </button>
+              </div>
+
+              <div className="mt-12 flex justify-center">
+                <button 
+                  onClick={() => setRoleSelectionEmployee(null)}
+                  className="px-10 py-4 border-2 border-slate-100 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] hover:border-red-100 hover:text-red-500 hover:bg-red-50 transition-all active:scale-95"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
