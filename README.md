@@ -1,81 +1,83 @@
-# BGH-HPAC Web Portal
+# BGH-HPAC Web Portal 🏥
 
-A professional Hospital Personnel and Admin Control (HPAC) system designed for Batanes General Hospital. This application manages employee records and provides role-based access for administrative and clinical staff.
+A state-of-the-art Hospital Personnel and Admin Control (HPAC) system designed specifically for Batanes General Hospital. This portal serves as the central hub for administrative oversight, employee management, and award proposal workflows.
 
-## 🚀 Tech Stack
+---
 
-- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
-- **Database:** [PostgreSQL](https://www.postgresql.org/) via [Supabase](https://supabase.com/)
-- **ORM:** [Prisma](https://www.prisma.io/)
-- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
-- **Authentication:** [Supabase SSR](https://supabase.com/docs/guides/auth/server-side/nextjs) + JWT (Jose)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
+## 🏗️ Core Architecture & Tech Stack
 
-## ✨ Key Features
+This project is built using modern web standards to ensure high performance, security, and a premium user experience.
 
-- **Role-Based Access Control (RBAC):**
-  - `ADMIN`: Full system control and user management.
-  - `HPAC_MEMBER`: Specialized access for committee operations.
-  - `EMPLOYEE`: General access for hospital employees.
-- **Modern Authentication:** Secure login using Employee ID and encrypted passwords (Bcrypt).
-- **Employee Mapping:** Seamless integration between `USER` accounts and the `bgh_employees` database.
-- **Responsive Design:** Premium, mobile-friendly interface built with modern CSS practices.
+- **Framework:** [Next.js 16 (App Router)](https://nextjs.org/) using Turbopack for development.
+- **Database:** [PostgreSQL](https://www.postgresql.org/) hosted via [Supabase](https://supabase.com/) with connection pooling (PgBouncer).
+- **ORM:** [Prisma](https://www.prisma.io/) for type-safe database interactions.
+- **State Management & Mutations:** [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) for all database changes with automatic `revalidatePath` cache purging.
+- **Security:** 
+  - **Middleware Enforced:** Custom `proxy.ts` middleware for role-based route protection and mandatory security redirects.
+  - **Auth:** JWT-based sessions (Jose) with secure, http-only cookies.
+  - **Hashing:** `bcryptjs` for secure password storage.
+- **Design:** Vanilla CSS with a focus on "Glassmorphism," micro-animations, and high-contrast accessibility.
 
-## 🛠️ Getting Started
+---
 
-### Prerequisites
+## ✨ Key Features & Workflows
 
-- [Node.js 20+](https://nodejs.org/)
-- [pnpm](https://pnpm.io/)
-- A Supabase account and project
+### 1. Administrative User Management (`/admin/users`)
+*   **Employee Records:** Full CRUD operations for hospital personnel mapping to a dedicated `bgh_employees` table.
+*   **Safe Deletion with Undo:** Deleting an employee triggers a 60-second "Soft-Delete" window. An interactive toast allows admins to **Undo** the action before it becomes permanent in the database.
+*   **Promotion Manager:** A custom, interactive modal for promoting employees to `ADMIN` or `HPAC_MEMBER` roles.
+*   **Password Resets:** Admins can instantly reset any user's password to the default `hpacpassword`, which automatically triggers a mandatory change on their next login.
 
-### Installation
+### 2. Award Proposal System (`/admin/awards`)
+*   **Dynamic Dashboard:** Real-time summary cards for "Pending," "Authorized," and "Rejected" proposals.
+*   **Status Management:** Streamlined workflow for approving or archiving award proposals.
+*   **History Archive:** Rejected awards are moved to a searchable archive where they can be viewed or restored to a pending state.
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd bgh-hpac-web
-   ```
+### 3. Mandatory Security Policy (`/change-password`)
+*   **First-Login Enforcement:** New users or those with reset passwords are automatically intercepted by middleware and forced to a mandatory `/change-password` route.
+*   **Validation:** Enforces a minimum 8-character password policy with live "Show Password" toggles.
+*   **Success Feedback:** A premium success screen confirms the update before redirecting the user back to the login page for a fresh, secure session.
 
-2. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
+---
 
-3. **Set up Environment Variables:**
-   Create a `.env` file in the root directory and add your credentials:
-   ```env
-   DATABASE_URL="your-postgresql-connection-string"
-   NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
-   NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
-   JWT_SECRET="your-secure-jwt-secret"
-   ```
+## 🔐 Security Model & Access Control
 
-4. **Initialize Prisma:**
-   ```bash
-   npx prisma generate
-   # To sync with your database:
-   # npx prisma db push
-   ```
+### Role Definitions:
+- **`ADMIN`**: Can manage employees, assign/remove roles, reset passwords, and oversee all award proposals.
+- **`HPAC_MEMBER`**: Can create award proposals and view authorized results.
+- **`EMPLOYEE`**: General access to personal dashboard and event attendance.
 
-5. **Run the development server:**
-   ```bash
-   pnpm dev
-   ```
+### Data Integrity:
+- **Soft Delete:** The `deletedAt` field on the `Employee` model prevents accidental data loss and enables the "Undo" feature.
+- **Relational Integrity:** Users are strictly mapped to an `employeeId` to ensure all system accounts correspond to verified hospital personnel.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-## 📁 Project Structure
+## 🛠️ Development Guide for AI Agents
 
-- `app/`: Next.js App Router (Pages and API routes)
-  - `(auth)/`: Authentication-related pages (Login)
-  - `admin/`: Admin-specific dashboard
-  - `hpac/`: HPAC-specific dashboard
-  - `employee/`: General user dashboard
-- `prisma/`: Database schema and migrations
-- `utils/`: Shared helper functions and Supabase clients
-- `components/`: Reusable UI components
+When working on this codebase, adhere to these standards:
 
-## 📄 License
+1.  **Mutations:** Always use **Server Actions** in `actions.ts` files. Do not use plain API fetch calls for database changes unless strictly necessary for third-party integrations.
+2.  **Revalidation:** Every Server Action must call `revalidatePath()` for the relevant route to keep the App Router cache synchronized.
+3.  **UI/UX:** Maintain the premium aesthetic. Use `animate-in`, `fade-in`, and `zoom-in` classes for modals. Use HSL-based color palettes for consistent glassmorphism.
+4.  **Database Changes:** 
+    *   Update `schema.prisma`.
+    *   Run `$env:DATABASE_URL="..."; npx prisma db push`.
+    *   Run `npx prisma generate`.
+    *   **CRITICAL:** Clear the `.next` folder if Turbopack doesn't pick up schema changes.
+5.  **Middleware:** Any new protected routes must be added to the matchers in `proxy.ts`.
 
-This project is private and intended for use by Bataan General Hospital staff.
+---
+
+## 📁 Project Structure Highlights
+
+- `/app/admin/users/actions.ts`: Contains all server-side logic for the User Management portal.
+- `/proxy.ts`: The central security gateway enforcing authentication and password policies.
+- `/utils/db.ts`: Singleton Prisma client initialization with PostgreSQL adapter support.
+- `/utils/auth.ts`: Session management, encryption, and password hashing utilities.
+
+---
+
+## 📄 License & Ownership
+This project is proprietary and intended for the exclusive use of **Batanes General Hospital**.
+Developed with ❤️ by the Alden Derf.
