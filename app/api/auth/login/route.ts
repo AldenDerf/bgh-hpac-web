@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     // 2. Determine User Type and Authentication
-    let userType: "ADMIN" | "HPAC_MEMBER" | "EMPLOYEE";
+    let userType: "ADMIN" | "HPAC_MEMBER" | "EMPLOYEE" | "STANDARD";
     let redirect = "/employee";
 
     if (employee.user) {
@@ -40,8 +40,12 @@ export async function POST(request: Request) {
         );
       }
 
-      userType = employee.user.userType;
-      redirect = userType === "ADMIN" ? "/admin" : "/hpac";
+      const userRole = employee.user.userType as string;
+      userType = userRole === "STANDARD" ? "EMPLOYEE" : userRole as any;
+      
+      if (userType === "ADMIN") redirect = "/admin";
+      else if (userType === "HPAC_MEMBER") redirect = "/hpac";
+      else redirect = "/employee";
     } else {
       // Employee User (Employee but not in User table)
       userType = "EMPLOYEE";

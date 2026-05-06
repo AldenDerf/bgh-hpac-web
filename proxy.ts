@@ -34,7 +34,7 @@ export async function proxy(request: NextRequest) {
       }
 
       // Employee user can only access /employee
-      if (userType === "EMPLOYEE") {
+      if (userType === "EMPLOYEE" || userType === "STANDARD") {
         if (isAdminRoute || isHpacRoute) {
           return NextResponse.redirect(new URL("/employee", request.url));
         }
