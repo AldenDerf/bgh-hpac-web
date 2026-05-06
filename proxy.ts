@@ -10,8 +10,9 @@ export async function proxy(request: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isHpacRoute = pathname.startsWith("/hpac");
   const isEmployeeRoute = pathname.startsWith("/employee");
+  const isHealthWorkerWeekRoute = pathname.startsWith("/health_worker_week_2026");
 
-  if (isAdminRoute || isHpacRoute || isEmployeeRoute) {
+  if (isAdminRoute || isHpacRoute || isEmployeeRoute || isHealthWorkerWeekRoute) {
     if (!session) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -21,7 +22,7 @@ export async function proxy(request: NextRequest) {
       const userType = payload.user.userType;
 
       // Admin can access everything
-      if (userType === "ADMIN") {
+      if (userType === "ADMIN" || isHealthWorkerWeekRoute) {
         return NextResponse.next();
       }
 
@@ -65,5 +66,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/hpac/:path*", "/employee/:path*", "/login"],
+  matcher: ["/admin/:path*", "/hpac/:path*", "/employee/:path*", "/health_worker_week_2026/:path*", "/login"],
 };
