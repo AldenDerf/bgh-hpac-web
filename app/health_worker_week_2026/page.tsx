@@ -44,36 +44,11 @@ export default function HealthWorkerWeekPage() {
                 <p className="text-base sm:text-lg text-slate-600 leading-relaxed mb-6 sm:mb-8 font-medium">
                   Who has inspired you this year? Nominate a colleague who exemplifies compassion, clinical excellence, and teamwork.
                 </p>
-                
-                <div className="bg-slate-50 rounded-2xl p-5 sm:p-6 mb-6 sm:mb-8 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2 text-sm sm:text-base">🏆 Recognition Categories:</h4>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600 font-semibold">
-                    <li className="flex items-center gap-2">✨ Patient Choice Award</li>
-                    <li className="flex items-center gap-2">🤝 Best Team Player</li>
-                    <li className="flex items-center gap-2">💡 Innovation in Care</li>
-                    <li className="flex items-center gap-2">🛡️ Safety Sentinel</li>
-                  </ul>
-                </div>
 
                 <button className="w-full sm:w-auto px-10 py-4 sm:py-5 bg-blue-600 text-white font-black text-base sm:text-lg rounded-2xl hover:bg-blue-700 hover:-translate-y-1 transition-all shadow-xl shadow-blue-200 active:scale-95">
                   Nominate a Colleague
                 </button>
               </div>
-
-              {/* Recognition Stats/Badge */}
-              <div className="bg-slate-900 rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-                <div className="text-center sm:text-left">
-                  <p className="text-blue-400 font-bold uppercase tracking-widest text-[10px] mb-1">Impact</p>
-                  <h3 className="text-xl sm:text-2xl font-bold">248 Health Workers</h3>
-                  <p className="text-slate-400 text-xs sm:text-sm">Recognized this month by patients and peers.</p>
-                </div>
-                <div className="h-12 w-12 sm:h-14 sm:w-14 bg-white/10 rounded-full flex items-center justify-center shrink-0">
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
 
             {/* SECONDARY HIGHLIGHT: Event Schedule (col-span 5) */}
             <div className="lg:col-span-5 space-y-6">
