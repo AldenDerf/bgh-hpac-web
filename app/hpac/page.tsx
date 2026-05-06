@@ -1,116 +1,65 @@
-"use client";
-
-import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import Link from "next/link";
 
 export default function HpacPage() {
-  const [awardName, setAwardName] = useState("");
-  const [awardDesc, setAwardDesc] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage(null);
-
-    try {
-      const res = await fetch("/api/awards", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: awardName, description: awardDesc }),
-      });
-
-      if (!res.ok) throw new Error("Failed to create award");
-
-      setMessage({ type: "success", text: "Award submitted for approval!" });
-      setAwardName("");
-      setAwardDesc("");
-    } catch (error) {
-      setMessage({ type: "error", text: "Something went wrong. Please try again." });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
-          <header className="mb-8">
+          <Breadcrumbs />
+          
+          <header className="mb-10">
             <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold tracking-widest uppercase mb-2">
-              HPAC Access
+              HPAC Dashboard
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Member Portal</h1>
-            <p className="text-slate-500 font-medium">BGH Hospital Personnel Advisory Committee</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Activities & Events</h1>
+            <p className="text-slate-500 font-medium">Manage hospital personnel advisory committee actions.</p>
           </header>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
-            <div className="bg-emerald-600 p-6 rounded-3xl text-white shadow-xl shadow-emerald-100 relative overflow-hidden group">
-              <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full group-hover:scale-125 transition-transform duration-500"></div>
-              <h3 className="text-sm font-bold opacity-80 uppercase tracking-wider">Active Claims</h3>
-              <p className="text-4xl font-black mt-2">12</p>
-            </div>
-            <div className="bg-slate-900 p-6 rounded-3xl text-white shadow-xl shadow-slate-200 relative overflow-hidden group">
-              <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full group-hover:scale-125 transition-transform duration-500"></div>
-              <h3 className="text-sm font-bold opacity-80 uppercase tracking-wider">Pending Reviews</h3>
-              <p className="text-4xl font-black mt-2">5</p>
-            </div>
-          </div>
-
-          {/* Award Creation Form */}
-          <div className="bg-white p-6 sm:p-10 rounded-[2rem] shadow-2xl shadow-slate-100 border border-slate-100">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <span className="text-xl">🏆</span>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900">Create New Award</h2>
-                <p className="text-sm text-slate-500">Proposed awards require Admin approval.</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 ml-1">Award Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Most Compassionate Nurse"
-                  className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500 transition-all text-slate-900 placeholder:text-slate-400"
-                  value={awardName}
-                  onChange={(e) => setAwardName(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2 ml-1">Description</label>
-                <textarea
-                  required
-                  rows={4}
-                  placeholder="Describe the criteria for this award..."
-                  className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500 transition-all text-slate-900 placeholder:text-slate-400"
-                  value={awardDesc}
-                  onChange={(e) => setAwardDesc(e.target.value)}
-                />
-              </div>
-
-              {message && (
-                <div className={`p-4 rounded-2xl text-sm font-bold ${
-                  message.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-red-50 text-red-700 border border-red-100"
-                }`}>
-                  {message.text}
+          <div className="grid grid-cols-1 gap-6">
+            {/* Health Worker Week Activity Card */}
+            <Link href="/hpac/activities/health-worker-week-2026" className="group">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 hover:border-emerald-200 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                <div className="absolute right-0 top-0 w-32 h-32 bg-emerald-50 rounded-full -translate-y-8 translate-x-8 group-hover:scale-125 transition-transform duration-500"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-10V4m0 10V4m0 10h1m-1 4h1m-7 10v-2a2 2 0 012-2h2a2 2 0 012 2v2m-7 0h11" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900">Health Worker Week 2026</h3>
+                      <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Active Activity</span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
+                    Manage awards, recognize excellence, and organize events for the upcoming Health Worker Week celebration.
+                  </p>
+                  
+                  <div className="flex items-center text-emerald-600 font-bold text-sm gap-2">
+                    Enter Activity Dashboard
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
                 </div>
-              )}
+              </div>
+            </Link>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-5 bg-emerald-600 text-white font-black rounded-2xl hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all active:scale-95 disabled:opacity-50"
-              >
-                {isSubmitting ? "Submitting..." : "Submit for Approval"}
-              </button>
-            </form>
+            {/* Other Activity Placeholder */}
+            <div className="bg-slate-100/50 p-8 rounded-[2rem] border border-dashed border-slate-200 flex flex-col items-center justify-center text-center opacity-60">
+              <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No Other Active Activities</p>
+            </div>
           </div>
         </div>
       </main>
