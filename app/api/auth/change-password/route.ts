@@ -47,12 +47,8 @@ export async function POST(request: Request) {
       sameSite: "strict",
     });
 
-    // Determine redirect
-    let redirect = "/employee";
-    if (updatedUser.userType === "ADMIN") redirect = "/admin";
-    else if (updatedUser.userType === "HPAC_MEMBER") redirect = "/hpac";
-
-    return NextResponse.json({ success: true, redirect });
+    // After password change, we redirect to login
+    return NextResponse.json({ success: true, redirect: "/login" });
   } catch (error) {
     console.error("Change password error:", error);
     return NextResponse.json({ error: "Failed to update password" }, { status: 500 });
