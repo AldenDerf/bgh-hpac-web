@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/utils/db";
 import { decrypt } from "@/utils/auth";
 import { cookies } from "next/headers";
-
-const prisma = new PrismaClient();
 
 // PATCH award status (ADMIN only)
 export async function PATCH(

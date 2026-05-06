@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/utils/db";
 import { decrypt } from "@/utils/auth";
 import { cookies } from "next/headers";
-
-const prisma = new PrismaClient();
 
 // GET all awards (with optional status filter)
 export async function GET(request: Request) {

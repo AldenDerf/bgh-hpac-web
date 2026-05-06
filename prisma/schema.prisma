@@ -31,7 +31,7 @@ model User {
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
   awards     Award[]
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("USER")
 }
@@ -58,7 +58,7 @@ model Award {
   createdById String      @map("created_by_id")
   createdBy   User        @relation(fields: [createdById], references: [id])
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  updatedAt   DateTime    @default(now()) @updatedAt
 
   @@map("awards")
 }
