@@ -45,7 +45,8 @@ model Employee {
   suffix           String?
   position         String
   section          String
-  employmentStatus String  @map("employment_status")
+  employmentStatus String    @map("employment_status")
+  deletedAt        DateTime? @map("deleted_at")
   user             User?
 
   @@map("bgh_employees")

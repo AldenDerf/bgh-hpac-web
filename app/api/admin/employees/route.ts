@@ -10,6 +10,7 @@ export async function GET() {
 
   try {
     const employees = await prisma.employee.findMany({
+      where: { deletedAt: null },
       include: { user: true },
       orderBy: { lastname: "asc" },
     });
@@ -41,7 +42,6 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(employee);
   } catch (error) {
-    console.error("Create employee error:", error);
     return NextResponse.json({ error: "Failed to create employee" }, { status: 500 });
   }
 }
@@ -53,7 +53,16 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const { employeeId, ...data } = await request.json();
+    const { employeeId, action, ...data } = await request.json();
+    
+    if (action === "restore") {
+      const employee = await prisma.employee.update({
+        where: { employeeId },
+        data: { deletedAt: null },
+      });
+      return NextResponse.json(employee);
+    }
+
     const employee = await prisma.employee.update({
       where: { employeeId },
       data,
@@ -61,5 +70,23 @@ export async function PATCH(request: Request) {
     return NextResponse.json(employee);
   } catch (error) {
     return NextResponse.json({ error: "Failed to update employee" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const session = await getSession();
+  if (!session || session.user.userType !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { employeeId } = await request.json();
+    const employee = await prisma.employee.update({
+      where: { employeeId },
+      data: { deletedAt: new Date() },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to delete employee" }, { status: 500 });
   }
 }
