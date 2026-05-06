@@ -85,21 +85,23 @@ export default function AdminAwardsApprovalPage() {
 
           {/* Summary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pending</p>
+            <Link href="/admin/awards" className="bg-white p-6 rounded-3xl border-2 border-blue-100 shadow-lg shadow-blue-50 hover:border-blue-300 transition-all group">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-blue-500 transition-colors">Pending</p>
               <h4 className="text-2xl font-black text-blue-600">{pendingAwards.length}</h4>
-            </div>
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Authorized</p>
+            </Link>
+            
+            <Link href="/admin/awards/approved" className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:border-emerald-200 hover:shadow-md transition-all group">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-emerald-500 transition-colors">Authorized</p>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 <h4 className="text-2xl font-black text-slate-900">{counts.approved}</h4>
               </div>
-            </div>
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Archived/Rejected</p>
-              <h4 className="text-2xl font-black text-slate-300">{counts.rejected}</h4>
-            </div>
+            </Link>
+
+            <Link href="/admin/awards/rejected" className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:border-red-200 hover:shadow-md transition-all group">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-red-500 transition-colors">Archived/Rejected</p>
+              <h4 className="text-2xl font-black text-slate-300 group-hover:text-red-400 transition-colors">{counts.rejected}</h4>
+            </Link>
           </div>
           
           <header className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
