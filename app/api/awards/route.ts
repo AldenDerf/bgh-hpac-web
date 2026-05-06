@@ -55,11 +55,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Name and description are required" }, { status: 400 });
     }
 
+    // Fallback: If id is missing in payload, fetch it from DB using employeeId
+    let userId = payload.user.id;
+    if (!userId) {
+      const user = await prisma.user.findUnique({
+        where: { employeeId: payload.user.employeeId },
+        select: { id: true },
+      });
+      userId = user?.id;
+    }
+
+    if (!userId) {
+      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+    }
+
     const award = await prisma.award.create({
       data: {
         name,
         description,
-        createdById: payload.user.id,
+        createdById: userId,
         status: "PENDING", // Default
       },
     });

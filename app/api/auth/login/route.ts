@@ -54,6 +54,7 @@ export async function POST(request: Request) {
 
     // 3. Create Session
     await login({
+      id: employee.user?.id,
       employeeId: employee.employeeId,
       userType: userType,
     });
