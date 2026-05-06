@@ -36,11 +36,11 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Logo / Brand */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-xs">BGH</span>
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="h-9 w-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100 group-active:scale-95 transition-transform">
+                <span className="text-white font-bold text-sm">BGH</span>
               </div>
-              <span className="text-slate-900 font-bold text-lg tracking-tight">
+              <span className="text-slate-900 font-bold text-lg tracking-tight hidden xs:block">
                 HPAC Portal
               </span>
             </Link>
@@ -70,7 +70,7 @@ export default function Navbar() {
 
             {/* Dropdown Menu */}
             {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+              <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right ring-1 ring-black ring-opacity-5">
                 <div className="px-4 py-2 border-b border-slate-50 mb-1">
                   <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     My Account
