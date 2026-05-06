@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BGH-HPAC Web Portal
 
-## Getting Started
+A professional Hospital Personnel and Admin Control (HPAC) system designed for Batanes General Hospital. This application manages employee records and provides role-based access for administrative and clinical staff.
 
-First, run the development server:
+## 🚀 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/) via [Supabase](https://supabase.com/)
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
+- **Authentication:** [Supabase SSR](https://supabase.com/docs/guides/auth/server-side/nextjs) + JWT (Jose)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+
+## ✨ Key Features
+
+- **Role-Based Access Control (RBAC):**
+  - `ADMIN`: Full system control and user management.
+  - `HPAC_MEMBER`: Specialized access for committee operations.
+  - `STANDARD`: General access for hospital employees.
+- **Modern Authentication:** Secure login using Employee ID and encrypted passwords (Bcrypt).
+- **Employee Mapping:** Seamless integration between `USER` accounts and the `bgh_employees` database.
+- **Responsive Design:** Premium, mobile-friendly interface built with modern CSS practices.
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- [Node.js 20+](https://nodejs.org/)
+- [pnpm](https://pnpm.io/)
+- A Supabase account and project
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd bgh-hpac-web
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up Environment Variables:**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   DATABASE_URL="your-postgresql-connection-string"
+   NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
+   NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+   JWT_SECRET="your-secure-jwt-secret"
+   ```
+
+4. **Initialize Prisma:**
+   ```bash
+   npx prisma generate
+   # To sync with your database:
+   # npx prisma db push
+   ```
+
+5. **Run the development server:**
+   ```bash
+   pnpm dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/`: Next.js App Router (Pages and API routes)
+  - `(auth)/`: Authentication-related pages (Login)
+  - `admin/`: Admin-specific dashboard
+  - `hpac/`: HPAC-specific dashboard
+  - `standard/`: General user dashboard
+- `prisma/`: Database schema and migrations
+- `utils/`: Shared helper functions and Supabase clients
+- `components/`: Reusable UI components
 
-## Learn More
+## 📄 License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is private and intended for use by Bataan General Hospital staff.
