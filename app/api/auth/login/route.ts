@@ -6,27 +6,53 @@ export async function POST(request: Request) {
   try {
     const { employeeId, password } = await request.json();
 
-    const user = await prisma.user.findUnique({
+    // 1. Check if the ID exists in the bgh_employees table
+    const employee = await prisma.employee.findUnique({
       where: { employeeId },
-      include: { employee: true },
+      include: { user: true },
     });
 
-    if (!user || !(await verifyPassword(password, user.password))) {
+    if (!employee) {
       return NextResponse.json(
-        { error: "Invalid employee ID or password" },
-        { status: 401 }
+        { error: "Employee ID not found in BGH records" },
+        { status: 404 }
       );
     }
 
-    await login({
-      employeeId: user.employeeId,
-      userType: user.userType,
-    });
-
-    // Determine redirect based on role
+    // 2. Determine User Type and Authentication
+    let userType: "ADMIN" | "HPAC_MEMBER" | "STANDARD";
     let redirect = "/standard";
-    if (user.userType === "ADMIN") redirect = "/admin";
-    else if (user.userType === "HPAC_MEMBER") redirect = "/hpac";
+
+    if (employee.user) {
+      // Administrative User (Admin or HPAC Member)
+      if (!password) {
+        return NextResponse.json(
+          { error: "Password is required for this account type", requiresPassword: true },
+          { status: 401 }
+        );
+      }
+
+      const isValid = await verifyPassword(password, employee.user.password);
+      if (!isValid) {
+        return NextResponse.json(
+          { error: "Invalid password" },
+          { status: 401 }
+        );
+      }
+
+      userType = employee.user.userType;
+      redirect = userType === "ADMIN" ? "/admin" : "/hpac";
+    } else {
+      // Standard User (Employee but not in User table)
+      userType = "STANDARD";
+      redirect = "/standard";
+    }
+
+    // 3. Create Session
+    await login({
+      employeeId: employee.employeeId,
+      userType: userType,
+    });
 
     return NextResponse.json({ success: true, redirect });
   } catch (error) {
