@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BackButton from "@/components/BackButton";
+import Link from "next/link";
 
 interface Award {
   id: string;
@@ -21,6 +23,7 @@ interface Award {
 export default function AdminAwardsApprovalPage() {
   const [pendingAwards, setPendingAwards] = useState<Award[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   const fetchPendingAwards = async () => {
     try {
@@ -48,6 +51,9 @@ export default function AdminAwardsApprovalPage() {
 
       if (res.ok) {
         setPendingAwards(pendingAwards.filter(a => a.id !== id));
+        if (status === "APPROVED") {
+          router.push("/admin/awards/approved");
+        }
       }
     } catch (error) {
       console.error("Failed to update status:", error);
@@ -62,9 +68,20 @@ export default function AdminAwardsApprovalPage() {
           <Breadcrumbs />
           <BackButton />
           
-          <header className="mb-10">
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Award Approvals</h1>
-            <p className="text-slate-500 font-medium">Review and authorize new award categories proposed by HPAC.</p>
+          <header className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight">Award Approvals</h1>
+              <p className="text-slate-500 font-medium">Review and authorize new award categories proposed by HPAC.</p>
+            </div>
+            <Link 
+              href="/admin/awards/approved" 
+              className="px-6 py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition-all flex items-center gap-2 w-fit uppercase tracking-widest shadow-sm"
+            >
+              View Approved Awards
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
           </header>
 
           <div className="bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
