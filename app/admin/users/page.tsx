@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import BackButton from "@/components/BackButton";
+import { 
+  createEmployee, 
+  updateEmployee, 
+  deleteEmployeeAction, 
+  restoreEmployeeAction, 
+  assignRoleAction, 
+  removeRoleAction, 
+  resetPasswordAction 
+} from "./actions";
 
 interface Employee {
   employeeId: string;
@@ -54,20 +59,15 @@ export default function AdminUserManagement() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (pendingDelete) {
-      interval = setInterval(() => {
-        setPendingDelete(prev => {
-          if (!prev) return null;
-          if (prev.timer <= 1) {
-            // Timer expired, perform actual delete
-            fetch("/api/admin/employees", {
-              method: "DELETE",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ employeeId: prev.id }),
-            });
-            return null;
-          }
-          return { ...prev, timer: prev.timer - 1 };
-        });
+      interval = setInterval(async () => {
+        if (pendingDelete.timer <= 1) {
+          // Timer expired, perform actual delete via Action
+          await deleteEmployeeAction(pendingDelete.id);
+          setPendingDelete(null);
+          // fetchEmployees(); // Not strictly needed if revalidatePath worked, but good for Client state
+        } else {
+          setPendingDelete(prev => prev ? { ...prev, timer: prev.timer - 1 } : null);
+        }
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -82,6 +82,8 @@ export default function AdminUserManagement() {
 
   const handleUndo = async () => {
     if (pendingDelete) {
+      // Since it's not deleted from DB yet (timer hadn't reached 0), 
+      // we just clear the pending state and restore UI
       setPendingDelete(null);
       fetchEmployees();
     }
@@ -89,13 +91,9 @@ export default function AdminUserManagement() {
 
   const handleRoleToggle = async (employeeId: string, currentRole?: string) => {
     if (currentRole) {
-      // Demote
+      // Demote via Action
       if (confirm("Remove administrative access for this user?")) {
-        await fetch("/api/admin/users", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ employeeId }),
-        });
+        await removeRoleAction(employeeId);
         fetchEmployees();
       }
     } else {
@@ -106,23 +104,16 @@ export default function AdminUserManagement() {
   };
 
   const assignRole = async (employeeId: string, role: string) => {
-    await fetch("/api/admin/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ employeeId, userType: role }),
-    });
+    await assignRoleAction(employeeId, role);
     setRoleSelectionEmployee(null);
     fetchEmployees();
   };
 
   const handlePasswordReset = async (employeeId: string) => {
     if (confirm("Reset password to 'hpacpassword'? User will be forced to change it on next login.")) {
-      await fetch("/api/admin/users", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employeeId }),
-      });
+      await resetPasswordAction(employeeId);
       alert("Password reset successfully.");
+      fetchEmployees();
     }
   };
 
@@ -280,11 +271,11 @@ export default function AdminUserManagement() {
               const formData = new FormData(e.currentTarget);
               const data = Object.fromEntries(formData);
               
-              await fetch("/api/admin/employees", {
-                method: editingEmployee ? "PATCH" : "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-              });
+              if (editingEmployee) {
+                await updateEmployee(editingEmployee.employeeId, data);
+              } else {
+                await createEmployee(data);
+              }
               
               setIsModalOpen(false);
               fetchEmployees();
