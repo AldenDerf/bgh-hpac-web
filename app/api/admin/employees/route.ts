@@ -15,8 +15,17 @@ export async function GET() {
       orderBy: { lastname: "asc" },
     });
     return NextResponse.json(employees);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch employees" }, { status: 500 });
+  } catch (error: any) {
+    console.error("GET Employees Error Details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      stack: error.stack
+    });
+    return NextResponse.json({ 
+      error: "Failed to fetch employees",
+      details: error.message 
+    }, { status: 500 });
   }
 }
 

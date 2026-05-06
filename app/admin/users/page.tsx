@@ -32,9 +32,15 @@ export default function AdminUserManagement() {
     try {
       const res = await fetch("/api/admin/employees");
       const data = await res.json();
-      setEmployees(data);
+      if (Array.isArray(data)) {
+        setEmployees(data);
+      } else {
+        console.error("Invalid employees data format:", data);
+        setEmployees([]);
+      }
     } catch (error) {
-      console.error("Failed to fetch employees");
+      console.error("Failed to fetch employees:", error);
+      setEmployees([]);
     } finally {
       setIsLoading(false);
     }
@@ -120,10 +126,10 @@ export default function AdminUserManagement() {
     }
   };
 
-  const filteredEmployees = employees.filter(e => 
+  const filteredEmployees = Array.isArray(employees) ? employees.filter(e => 
     `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase()) ||
     e.employeeId.includes(search)
-  );
+  ) : [];
 
   return (
     <div className="min-h-screen bg-slate-50">
