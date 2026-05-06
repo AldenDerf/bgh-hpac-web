@@ -20,8 +20,8 @@ export async function POST(request: Request) {
     }
 
     // 2. Determine User Type and Authentication
-    let userType: "ADMIN" | "HPAC_MEMBER" | "STANDARD";
-    let redirect = "/standard";
+    let userType: "ADMIN" | "HPAC_MEMBER" | "EMPLOYEE";
+    let redirect = "/employee";
 
     if (employee.user) {
       // Administrative User (Admin or HPAC Member)
@@ -43,9 +43,9 @@ export async function POST(request: Request) {
       userType = employee.user.userType;
       redirect = userType === "ADMIN" ? "/admin" : "/hpac";
     } else {
-      // Standard User (Employee but not in User table)
-      userType = "STANDARD";
-      redirect = "/standard";
+      // Employee User (Employee but not in User table)
+      userType = "EMPLOYEE";
+      redirect = "/employee";
     }
 
     // 3. Create Session

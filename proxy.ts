@@ -9,9 +9,9 @@ export async function proxy(request: NextRequest) {
   // Define protected routes
   const isAdminRoute = pathname.startsWith("/admin");
   const isHpacRoute = pathname.startsWith("/hpac");
-  const isStandardRoute = pathname.startsWith("/standard");
+  const isEmployeeRoute = pathname.startsWith("/employee");
 
-  if (isAdminRoute || isHpacRoute || isStandardRoute) {
+  if (isAdminRoute || isHpacRoute || isEmployeeRoute) {
     if (!session) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -25,7 +25,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
       }
 
-      // HPAC member can access /hpac and /standard
+      // HPAC member can access /hpac and /employee
       if (userType === "HPAC_MEMBER") {
         if (isAdminRoute) {
           return NextResponse.redirect(new URL("/hpac", request.url));
@@ -33,10 +33,10 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
       }
 
-      // Standard user can only access /standard
-      if (userType === "STANDARD") {
+      // Employee user can only access /employee
+      if (userType === "EMPLOYEE") {
         if (isAdminRoute || isHpacRoute) {
-          return NextResponse.redirect(new URL("/standard", request.url));
+          return NextResponse.redirect(new URL("/employee", request.url));
         }
         return NextResponse.next();
       }
@@ -55,7 +55,7 @@ export async function proxy(request: NextRequest) {
       const userType = payload.user.userType;
       if (userType === "ADMIN") return NextResponse.redirect(new URL("/admin", request.url));
       if (userType === "HPAC_MEMBER") return NextResponse.redirect(new URL("/hpac", request.url));
-      return NextResponse.redirect(new URL("/standard", request.url));
+      return NextResponse.redirect(new URL("/employee", request.url));
     } catch (error) {
       // Session invalid, continue to login
     }
@@ -65,5 +65,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/hpac/:path*", "/standard/:path*", "/login"],
+  matcher: ["/admin/:path*", "/hpac/:path*", "/employee/:path*", "/login"],
 };

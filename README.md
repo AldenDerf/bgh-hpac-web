@@ -16,7 +16,7 @@ A professional Hospital Personnel and Admin Control (HPAC) system designed for B
 - **Role-Based Access Control (RBAC):**
   - `ADMIN`: Full system control and user management.
   - `HPAC_MEMBER`: Specialized access for committee operations.
-  - `STANDARD`: General access for hospital employees.
+  - `EMPLOYEE`: General access for hospital employees.
 - **Modern Authentication:** Secure login using Employee ID and encrypted passwords (Bcrypt).
 - **Employee Mapping:** Seamless integration between `USER` accounts and the `bgh_employees` database.
 - **Responsive Design:** Premium, mobile-friendly interface built with modern CSS practices.
@@ -71,7 +71,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - `(auth)/`: Authentication-related pages (Login)
   - `admin/`: Admin-specific dashboard
   - `hpac/`: HPAC-specific dashboard
-  - `standard/`: General user dashboard
+  - `employee/`: General user dashboard
 - `prisma/`: Database schema and migrations
 - `utils/`: Shared helper functions and Supabase clients
 - `components/`: Reusable UI components

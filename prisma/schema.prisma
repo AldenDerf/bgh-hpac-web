@@ -14,7 +14,7 @@ datasource db {
 enum UserType {
   ADMIN
   HPAC_MEMBER
-  STANDARD
+  EMPLOYEE
 }
 
 model User {

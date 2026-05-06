@@ -69,11 +69,11 @@ export async function GET() {
 
     await prisma.user.upsert({
       where: { employeeId: "EMP-STANDARD" },
-      update: { password, userType: "STANDARD" },
+      update: { password, userType: "EMPLOYEE" },
       create: {
         employeeId: "EMP-STANDARD",
         password,
-        userType: "STANDARD",
+        userType: "EMPLOYEE",
       },
     });
 

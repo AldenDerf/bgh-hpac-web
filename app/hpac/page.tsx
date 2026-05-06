@@ -8,7 +8,7 @@ export default function HpacPage() {
         <div className="max-w-4xl mx-auto">
           <header className="mb-8">
             <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">HPAC Member Portal</h1>
-            <p className="text-sm text-gray-500 font-medium">Member Services & Resources</p>
+            <p className="text-sm text-gray-500 font-medium">Employee Services & Resources</p>
           </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -25,7 +25,7 @@ export default function HpacPage() {
         <div className="mt-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Member Tools</h2>
           <p className="text-gray-600 mb-6">
-            Welcome, HPAC Member. You have access to member-only resources and standard employee features.
+            Welcome, HPAC Member. You have access to member-only resources and employee features.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button className="p-4 bg-emerald-50 text-emerald-700 font-semibold rounded-xl hover:bg-emerald-100 transition-colors text-left border border-emerald-100">
