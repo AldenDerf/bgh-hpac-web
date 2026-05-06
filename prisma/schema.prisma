@@ -17,12 +17,21 @@ enum UserType {
   EMPLOYEE
 }
 
+enum AwardStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   employeeId String   @unique @map("employee_id")
   password   String
   userType   UserType @map("user_type")
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
+  awards     Award[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("USER")
 }
@@ -39,4 +48,17 @@ model Employee {
   user             User?
 
   @@map("bgh_employees")
+}
+
+model Award {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  status      AwardStatus @default(PENDING)
+  createdById String      @map("created_by_id")
+  createdBy   User        @relation(fields: [createdById], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("awards")
 }

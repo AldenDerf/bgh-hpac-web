@@ -1,6 +1,33 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 
+interface Award {
+  id: string;
+  name: string;
+  description: string;
+}
+
 export default function HealthWorkerWeekPage() {
+  const [approvedAwards, setApprovedAwards] = useState<Award[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAwards = async () => {
+      try {
+        const res = await fetch("/api/awards?status=APPROVED");
+        const data = await res.json();
+        setApprovedAwards(data);
+      } catch (error) {
+        console.error("Failed to fetch awards:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAwards();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
@@ -39,16 +66,38 @@ export default function HealthWorkerWeekPage() {
                 </div>
                 
                 <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 sm:mb-6 flex items-center gap-3">
-                  Excellence <span className="text-blue-600 whitespace-nowrap">Awards</span>
+                  Nominate a <span className="text-blue-600 whitespace-nowrap">Colleague</span>
                 </h2>
-                <p className="text-base sm:text-lg text-slate-600 leading-relaxed mb-6 sm:mb-8 font-medium">
-                  Who has inspired you this year? Nominate a colleague who exemplifies compassion, clinical excellence, and teamwork.
+                <p className="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 font-medium">
+                  Celebrate excellence! Select an award category below and recognize the outstanding work of your peers.
                 </p>
-
-                <button className="w-full sm:w-auto px-10 py-4 sm:py-5 bg-blue-600 text-white font-black text-base sm:text-lg rounded-2xl hover:bg-blue-700 hover:-translate-y-1 transition-all shadow-xl shadow-blue-200 active:scale-95">
-                  Nominate a Colleague
-                </button>
+                
+                <div className="space-y-4">
+                  {isLoading ? (
+                    <div className="py-10 text-center text-slate-400 font-medium">Loading awards...</div>
+                  ) : approvedAwards.length === 0 ? (
+                    <div className="py-10 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                      <p className="text-slate-500 font-bold">Awards are currently being finalized.</p>
+                      <p className="text-xs text-slate-400 mt-1">Check back soon to start nominating!</p>
+                    </div>
+                  ) : (
+                    approvedAwards.map((award) => (
+                      <div key={award.id} className="bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 rounded-2xl p-5 sm:p-6 transition-all group/award">
+                        <div className="flex justify-between items-start gap-4">
+                          <div className="space-y-1">
+                            <h4 className="font-bold text-slate-900 group-hover/award:text-blue-700 transition-colors">{award.name}</h4>
+                            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{award.description}</p>
+                          </div>
+                          <button className="shrink-0 px-4 py-2 bg-white text-blue-600 text-xs font-black rounded-xl border border-slate-200 shadow-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all active:scale-95">
+                            NOMINATE
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
+            </div>
 
             {/* SECONDARY HIGHLIGHT: Event Schedule (col-span 5) */}
             <div className="lg:col-span-5 space-y-6">
