@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     // 2. Determine User Type and Authentication
     let userType: "ADMIN" | "HPAC_MEMBER" | "EMPLOYEE" | "STANDARD";
-    let redirect = "/employee";
+    let redirect = "/";
 
     if (employee.user) {
       // Administrative User (Admin or HPAC Member)
@@ -43,13 +43,12 @@ export async function POST(request: Request) {
       const userRole = employee.user.userType as string;
       userType = userRole === "STANDARD" ? "EMPLOYEE" : userRole as any;
       
-      if (userType === "ADMIN") redirect = "/admin";
-      else if (userType === "HPAC_MEMBER") redirect = "/hpac";
-      else redirect = "/employee";
+      // All roles now redirect to the root dashboard
+      redirect = "/";
     } else {
       // Employee User (Employee but not in User table)
       userType = "EMPLOYEE";
-      redirect = "/employee";
+      redirect = "/";
     }
 
     // 3. Create Session
