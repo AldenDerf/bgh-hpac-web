@@ -14,6 +14,7 @@ interface Employee {
   employeeId: string;
   firstname: string;
   lastname: string;
+  section: string;
 }
 
 export default function HealthWorkerWeekPage() {
@@ -24,6 +25,7 @@ export default function HealthWorkerWeekPage() {
   const [selectedAward, setSelectedAward] = useState<Award | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedNomineeId, setSelectedNomineeId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,11 +47,14 @@ export default function HealthWorkerWeekPage() {
 
   const handleNominate = (award: Award) => {
     setSelectedAward(award);
+    setSearch("");
+    setSelectedNomineeId(null);
     setIsNominalModalOpen(true);
   };
 
   const filteredEmployees = employees.filter(e => 
-    `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase())
+    `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase()) ||
+    e.section.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -206,24 +211,63 @@ export default function HealthWorkerWeekPage() {
                 }
               }} className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Select Nominee</label>
-                  <div className="relative">
-                    <select 
-                      name="nomineeId" 
-                      required 
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 appearance-none transition-all outline-none"
-                    >
-                      <option value="">Choose an employee...</option>
-                      {employees.map(emp => (
-                        <option key={emp.employeeId} value={emp.employeeId}>
-                          {emp.lastname}, {emp.firstname}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                      </svg>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Search & Select Nominee</label>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <input 
+                        type="text"
+                        placeholder="Search by name or section..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 transition-all outline-none pl-12"
+                      />
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                          <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-[2rem] border-2 border-slate-100 overflow-hidden">
+                      <div className="max-h-48 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                        {filteredEmployees.length > 0 ? (
+                          filteredEmployees.map((emp) => (
+                            <label 
+                              key={emp.employeeId} 
+                              className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                                selectedNomineeId === emp.employeeId 
+                                  ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200" 
+                                  : "hover:bg-white border-transparent text-slate-900"
+                              }`}
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-bold text-sm leading-tight">{emp.lastname}, {emp.firstname}</span>
+                                <span className={`text-[10px] font-medium uppercase tracking-wider ${
+                                  selectedNomineeId === emp.employeeId ? "text-blue-100" : "text-slate-500"
+                                }`}>
+                                  {emp.section}
+                                </span>
+                              </div>
+                              <input 
+                                type="radio" 
+                                name="nomineeId" 
+                                value={emp.employeeId}
+                                required
+                                checked={selectedNomineeId === emp.employeeId}
+                                onChange={() => setSelectedNomineeId(emp.employeeId)}
+                                className="sr-only"
+                              />
+                              {selectedNomineeId === emp.employeeId && (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-white">
+                                  <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                                </svg>
+                              )}
+                            </label>
+                          ))
+                        ) : (
+                          <div className="py-8 text-center text-slate-400 italic text-sm">No employees found</div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
