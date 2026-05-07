@@ -54,3 +54,19 @@ export async function submitNomination(formData: { awardId: string; nomineeId: s
     return { error: "Failed to submit nomination. Please try again." };
   }
 }
+
+export async function getUserNominations() {
+  const session = await getSession();
+  if (!session) return [];
+
+  try {
+    const nominations = await prisma.nomination.findMany({
+      where: { nominatorId: session.user.employeeId },
+      select: { awardId: true }
+    });
+    return nominations.map(n => n.awardId);
+  } catch (error) {
+    console.error("Failed to fetch user nominations:", error);
+    return [];
+  }
+}
