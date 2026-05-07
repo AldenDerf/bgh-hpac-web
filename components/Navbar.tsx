@@ -2,15 +2,30 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<{ userType: string } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+    fetchUser();
+  }, []);
+
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
@@ -44,6 +59,46 @@ export default function Navbar() {
                 HPAC Portal
               </span>
             </Link>
+
+            {/* Role-based Links */}
+            <div className="hidden sm:flex items-center ml-8 gap-1">
+              {user?.userType === "ADMIN" && (
+                <>
+                  <Link
+                    href="/admin"
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                      pathname.startsWith("/admin")
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    Admin
+                  </Link>
+                  <Link
+                    href="/hpac"
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                      pathname.startsWith("/hpac")
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    HPAC
+                  </Link>
+                </>
+              )}
+              {user?.userType === "HPAC_MEMBER" && (
+                <Link
+                  href="/hpac"
+                  className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                    pathname.startsWith("/hpac")
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  HPAC
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Right side: Profile Dropdown */}
