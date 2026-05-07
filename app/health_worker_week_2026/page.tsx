@@ -214,14 +214,17 @@ export default function HealthWorkerWeekPage() {
               </div>
             ) : (
               <div className="p-8 sm:p-10">
-                <header className="text-center mb-8">
+                <header className="text-center mb-8 px-4">
                   <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    {/* Replaced Arrow Icon with Trophy Icon */}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
-                      <path fillRule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      <path fillRule="evenodd" d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 0 0-.584.859 6.753 6.753 0 0 0 6.138 5.6 6.73 6.73 0 0 0 2.743 1.346v4.91a.75.75 0 0 0-.427.684l-.012.34c-.018.516-.035 1.031-.054 1.548h-1.13a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-1.13c-.019-.517-.036-1.032-.054-1.548l-.012-.34a.75.75 0 0 0-.427-.684v-4.91a6.73 6.73 0 0 0 2.743-1.346 6.753 6.753 0 0 0 6.138-5.6.75.75 0 0 0-.584-.859 47.469 47.469 0 0 0-3.071-.543v-.858a.75.75 0 0 1 .75-.75h1.125a.75.75 0 0 0 0-1.5H4.041a.75.75 0 0 0 0 1.5H5.166a.75.75 0 0 1 .75.75ZM20.25 5.053c.96.12 1.914.263 2.859.43a5.253 5.253 0 0 1-4.43 4.12 47.27 47.27 0 0 0 .522-3.8c.311-.254.664-.47 1.049-.64a.75.75 0 0 1 1.049.64V5.053Zm-16.5 0a.75.75 0 0 1 1.049-.64c.385.17.738.386 1.049.64a47.272 47.272 0 0 0 .522 3.8 5.253 5.253 0 0 1-4.43-4.12c.945-.167 1.899-.31 2.859-.43v.75Z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-black text-slate-900">{selectedAward.name}</h3>
-                  <p className="text-slate-500 font-medium text-sm mt-1">Submit your nomination for this category</p>
+                  <h3 className="text-2xl font-black text-slate-900 leading-tight">{selectedAward.name}</h3>
+                  <p className="text-slate-500 font-medium text-xs mt-2 leading-relaxed">
+                    {selectedAward.description}
+                  </p>
                 </header>
 
                 <form onSubmit={async (e) => {
@@ -247,13 +250,13 @@ export default function HealthWorkerWeekPage() {
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Search & Select Nominee</label>
                     <div className="space-y-3">
-                      <div className="relative">
+                      <div className="relative group">
                         <input 
                           type="text"
                           placeholder="Search by name or section..."
                           value={search}
                           onChange={(e) => setSearch(e.target.value)}
-                          className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 transition-all outline-none pl-12"
+                          className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:ring-4 focus:ring-blue-100 rounded-2xl text-sm font-bold text-slate-900 transition-all outline-none pl-12 shadow-sm"
                         />
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
