@@ -61,9 +61,11 @@ export default function Navbar() {
                 HPAC Portal
               </span>
             </Link>
+          </div>
 
+          <div className="flex items-center gap-4">
             {/* Role-based Links */}
-            <div className="hidden sm:flex items-center ml-8 gap-1">
+            <div className="hidden sm:flex items-center gap-1">
               {user?.userType === "ADMIN" && (
                 <>
                   <Link
@@ -101,9 +103,8 @@ export default function Navbar() {
                 </Link>
               )}
             </div>
-          </div>
 
-          {/* Right side: Profile Dropdown */}
+            {/* Right side: Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsOpen(!isOpen)}
