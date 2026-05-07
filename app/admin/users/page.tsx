@@ -266,44 +266,128 @@ export default function AdminUserManagement() {
         </div>
       </main>
 
-      {/* Basic Add/Edit Modal (Simplified for this task) */}
+      {/* New/Edit Employee Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2.5rem] w-full max-w-lg shadow-2xl p-10">
-            <h2 className="text-2xl font-black text-slate-900 mb-8">{editingEmployee ? "Edit Employee" : "New Employee"}</h2>
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const data = Object.fromEntries(formData);
-              
-              if (editingEmployee) {
-                await updateEmployee(editingEmployee.employeeId, data);
-              } else {
-                await createEmployee(data);
-              }
-              
-              setIsModalOpen(false);
-              fetchEmployees();
-            }} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <input name="employeeId" placeholder="Employee ID" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm" defaultValue={editingEmployee?.employeeId} />
-                <input name="employmentStatus" placeholder="Status (REGULAR/JO/etc)" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm" defaultValue="REGULAR" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <input name="firstname" placeholder="First Name" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm" defaultValue={editingEmployee?.firstname} />
-                <input name="lastname" placeholder="Last Name" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm" defaultValue={editingEmployee?.lastname} />
-              </div>
-              <input name="position" placeholder="Position" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm w-full" defaultValue={editingEmployee?.position} />
-              <input name="section" placeholder="Section" required className="px-6 py-4 bg-slate-50 rounded-2xl text-sm w-full" defaultValue={editingEmployee?.section} />
-              
-              <div className="flex gap-4 pt-6">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]">Cancel</button>
-                <button type="submit" className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-600 transition-all">Save Record</button>
-              </div>
-            </form>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[3rem] w-full max-w-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-8 sm:p-12">
+              <header className="mb-10">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                      <path d="M6.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM3.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM19.75 7.5a.75.75 0 0 0-1.5 0v2.25H16a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H22a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+                    {editingEmployee ? "Update Record" : "New Personnel"}
+                  </h2>
+                </div>
+                <p className="text-slate-500 font-medium">Please provide the complete employment details below.</p>
+              </header>
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const data = Object.fromEntries(formData);
+                
+                if (editingEmployee) {
+                  await updateEmployee(editingEmployee.employeeId, data);
+                } else {
+                  await createEmployee(data);
+                }
+                
+                setIsModalOpen(false);
+                fetchEmployees();
+              }} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Employee ID</label>
+                    <input 
+                      name="employeeId" 
+                      placeholder="e.g., 20240001" 
+                      required 
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      defaultValue={editingEmployee?.employeeId} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Employment Status</label>
+                    <input 
+                      name="employmentStatus" 
+                      placeholder="REGULAR / JO / CONTRACTUAL" 
+                      required 
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      defaultValue={editingEmployee?.employmentStatus || "REGULAR"} 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First Name</label>
+                    <input 
+                      name="firstname" 
+                      placeholder="Legal first name" 
+                      required 
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      defaultValue={editingEmployee?.firstname} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last Name</label>
+                    <input 
+                      name="lastname" 
+                      placeholder="Legal last name" 
+                      required 
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      defaultValue={editingEmployee?.lastname} 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Position / Title</label>
+                  <input 
+                    name="position" 
+                    placeholder="e.g., Senior Medical Staff" 
+                    required 
+                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                    defaultValue={editingEmployee?.position} 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Department / Section</label>
+                  <input 
+                    name="section" 
+                    placeholder="e.g., Nursing Department" 
+                    required 
+                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                    defaultValue={editingEmployee?.section} 
+                  />
+                </div>
+                
+                <div className="flex gap-4 pt-8">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsModalOpen(false)} 
+                    className="flex-1 py-4 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all"
+                  >
+                    Discard
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-200 transition-all active:scale-[0.98]"
+                  >
+                    {editingEmployee ? "Confirm Update" : "Save Personnel"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
+
       {/* Role Selection Modal */}
       {roleSelectionEmployee && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
