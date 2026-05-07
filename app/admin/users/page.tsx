@@ -109,7 +109,7 @@ export default function AdminUserManagement() {
     }
   };
 
-  const assignRole = async (employeeId: string, role: string) => {
+  const assignRole = async (employeeId: string, role: any) => {
     await assignRoleAction(employeeId, role);
     setRoleSelectionEmployee(null);
     fetchEmployees();

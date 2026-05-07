@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/utils/db";
+import { UserType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/utils/auth";
 
@@ -75,7 +76,7 @@ export async function restoreEmployeeAction(employeeId: string) {
   }
 }
 
-export async function assignRoleAction(employeeId: string, userType: string) {
+export async function assignRoleAction(employeeId: string, userType: UserType) {
   await checkAdmin();
   try {
     // Check if user already exists
