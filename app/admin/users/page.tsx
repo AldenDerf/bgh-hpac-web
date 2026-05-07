@@ -301,22 +301,22 @@ export default function AdminUserManagement() {
               }} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Employee ID</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">Employee ID</label>
                     <input 
                       name="employeeId" 
                       placeholder="e.g., 20240001" 
                       required 
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                       defaultValue={editingEmployee?.employeeId} 
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Employment Status</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">Employment Status</label>
                     <input 
                       name="employmentStatus" 
                       placeholder="REGULAR / JO / CONTRACTUAL" 
                       required 
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                       defaultValue={editingEmployee?.employmentStatus || "REGULAR"} 
                     />
                   </div>
@@ -324,45 +324,45 @@ export default function AdminUserManagement() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First Name</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">First Name</label>
                     <input 
                       name="firstname" 
                       placeholder="Legal first name" 
                       required 
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                       defaultValue={editingEmployee?.firstname} 
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last Name</label>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">Last Name</label>
                     <input 
                       name="lastname" 
                       placeholder="Legal last name" 
                       required 
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                      className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                       defaultValue={editingEmployee?.lastname} 
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Position / Title</label>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">Position / Title</label>
                   <input 
                     name="position" 
                     placeholder="e.g., Senior Medical Staff" 
                     required 
-                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                    className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                     defaultValue={editingEmployee?.position} 
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Department / Section</label>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider ml-1">Department / Section</label>
                   <input 
                     name="section" 
                     placeholder="e.g., Nursing Department" 
                     required 
-                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl text-sm font-semibold transition-all outline-none" 
+                    className="w-full px-6 py-4 bg-white border-2 border-slate-200 focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-500 transition-all outline-none shadow-sm" 
                     defaultValue={editingEmployee?.section} 
                   />
                 </div>
@@ -371,15 +371,15 @@ export default function AdminUserManagement() {
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)} 
-                    className="flex-1 py-4 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all"
+                    className="flex-1 py-4 text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all border border-slate-200"
                   >
-                    Discard
+                    Discard Changes
                   </button>
                   <button 
                     type="submit" 
-                    className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-200 transition-all active:scale-[0.98]"
+                    className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 transition-all active:scale-[0.98]"
                   >
-                    {editingEmployee ? "Confirm Update" : "Save Personnel"}
+                    {editingEmployee ? "Update Record" : "Save Personnel"}
                   </button>
                 </div>
               </form>
