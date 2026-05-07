@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
+import { getEmployees, submitNomination } from "./actions";
 
 interface Award {
   id: string;
@@ -9,24 +10,47 @@ interface Award {
   description: string;
 }
 
+interface Employee {
+  employeeId: string;
+  firstname: string;
+  lastname: string;
+}
+
 export default function HealthWorkerWeekPage() {
   const [approvedAwards, setApprovedAwards] = useState<Award[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNominalModalOpen, setIsNominalModalOpen] = useState(false);
+  const [selectedAward, setSelectedAward] = useState<Award | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const fetchAwards = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/awards?status=APPROVED");
-        const data = await res.json();
-        setApprovedAwards(data);
+        const [awardsRes, empData] = await Promise.all([
+          fetch("/api/awards?status=APPROVED").then(res => res.json()),
+          getEmployees()
+        ]);
+        setApprovedAwards(awardsRes);
+        setEmployees(empData);
       } catch (error) {
-        console.error("Failed to fetch awards:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchAwards();
+    fetchData();
   }, []);
+
+  const handleNominate = (award: Award) => {
+    setSelectedAward(award);
+    setIsNominalModalOpen(true);
+  };
+
+  const filteredEmployees = employees.filter(e => 
+    `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -88,7 +112,10 @@ export default function HealthWorkerWeekPage() {
                             <h4 className="font-bold text-slate-900 group-hover/award:text-blue-700 transition-colors">{award.name}</h4>
                             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{award.description}</p>
                           </div>
-                          <button className="shrink-0 px-4 py-2 bg-white text-blue-600 text-xs font-black rounded-xl border border-slate-200 shadow-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all active:scale-95">
+                          <button 
+                            onClick={() => handleNominate(award)}
+                            className="shrink-0 px-4 py-2 bg-white text-blue-600 text-xs font-black rounded-xl border border-slate-200 shadow-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all active:scale-95"
+                          >
                             NOMINATE
                           </button>
                         </div>
@@ -142,6 +169,96 @@ export default function HealthWorkerWeekPage() {
           </div>
         </div>
       </main>
+
+      {/* Nomination Modal */}
+      {isNominalModalOpen && selectedAward && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-8 sm:p-10">
+              <header className="text-center mb-8">
+                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                    <path fillRule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-black text-slate-900">{selectedAward.name}</h3>
+                <p className="text-slate-500 font-medium text-sm mt-1">Submit your nomination for this category</p>
+              </header>
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setSubmitting(true);
+                const formData = new FormData(e.currentTarget);
+                const data = {
+                  awardId: selectedAward.id,
+                  nomineeId: formData.get("nomineeId") as string,
+                  reason: formData.get("reason") as string,
+                };
+
+                const result = await submitNomination(data);
+                setSubmitting(false);
+
+                if (result.success) {
+                  alert("Nomination submitted successfully!");
+                  setIsNominalModalOpen(false);
+                } else {
+                  alert(result.error);
+                }
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Select Nominee</label>
+                  <div className="relative">
+                    <select 
+                      name="nomineeId" 
+                      required 
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 appearance-none transition-all outline-none"
+                    >
+                      <option value="">Choose an employee...</option>
+                      {employees.map(emp => (
+                        <option key={emp.employeeId} value={emp.employeeId}>
+                          {emp.lastname}, {emp.firstname}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Reason (Optional)</label>
+                  <textarea 
+                    name="reason" 
+                    placeholder="Why are you nominating this person?"
+                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-600 rounded-2xl text-sm font-bold text-slate-900 transition-all outline-none h-32 resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsNominalModalOpen(false)}
+                    className="flex-1 py-4 text-slate-400 hover:text-slate-900 font-black uppercase tracking-[0.2em] text-[10px] transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    disabled={submitting}
+                    className="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    {submitting ? "Submitting..." : "Confirm Nomination"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
