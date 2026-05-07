@@ -21,6 +21,7 @@ interface Employee {
   lastname: string;
   position: string;
   section: string;
+  employmentStatus: string;
   user?: {
     id: string;
     userType: string;
