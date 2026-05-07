@@ -31,7 +31,6 @@ model User {
   userType   UserType @map("user_type")
   employee   Employee @relation(fields: [employeeId], references: [employeeId])
   awards     Award[]
-  nominations Nomination[] @relation("Nominator")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
   requiresPasswordChange Boolean @default(false) @map("requires_password_change")
@@ -50,7 +49,8 @@ model Employee {
   employmentStatus String    @map("employment_status")
   deletedAt        DateTime? @map("deleted_at")
   user             User?
-  nominations      Nomination[] @relation("Nominee")
+  nominationsMade  Nomination[] @relation("Nominator")
+  nominationsReceived Nomination[] @relation("Nominee")
 
   @@map("bgh_employees")
 }
@@ -79,7 +79,7 @@ model Nomination {
 
   award       Award    @relation(fields: [awardId], references: [id])
   nominee     Employee @relation("Nominee", fields: [nomineeId], references: [employeeId])
-  nominator   User     @relation("Nominator", fields: [nominatorId], references: [id])
+  nominator   Employee @relation("Nominator", fields: [nominatorId], references: [employeeId])
 
   @@unique([awardId, nominatorId]) // One nomination per award per user
   @@map("nominations")

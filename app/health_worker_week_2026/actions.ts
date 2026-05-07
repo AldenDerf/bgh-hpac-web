@@ -29,7 +29,7 @@ export async function submitNomination(formData: { awardId: string; nomineeId: s
       where: {
         awardId_nominatorId: {
           awardId: formData.awardId,
-          nominatorId: session.user.id
+          nominatorId: session.user.employeeId
         }
       }
     });
@@ -42,7 +42,7 @@ export async function submitNomination(formData: { awardId: string; nomineeId: s
       data: {
         awardId: formData.awardId,
         nomineeId: formData.nomineeId,
-        nominatorId: session.user.id,
+        nominatorId: session.user.employeeId,
         reason: formData.reason
       }
     });
