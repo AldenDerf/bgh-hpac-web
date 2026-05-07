@@ -1,6 +1,14 @@
 import Navbar from "@/components/Navbar";
+import { getSession } from "@/utils/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
