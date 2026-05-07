@@ -10,6 +10,7 @@ export default function CreateAwardPage() {
   const [awardName, setAwardName] = useState("");
   const [awardDesc, setAwardDesc] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const router = useRouter();
 
@@ -27,17 +28,20 @@ export default function CreateAwardPage() {
 
       if (!res.ok) throw new Error("Failed to create award");
 
-      setMessage({ type: "success", text: "Award submitted for approval!" });
+      setMessage({ type: "success", text: "Award category proposed successfully!" });
+      setIsRedirecting(true);
+      
+      // Clear inputs
       setAwardName("");
       setAwardDesc("");
       
-      // Redirect back after short delay
+      // Smooth redirect
       setTimeout(() => {
         router.push("/hpac/activities/health-worker-week-2026/awards");
-      }, 2000);
+        router.refresh();
+      }, 1500);
     } catch (error) {
       setMessage({ type: "error", text: "Something went wrong. Please try again." });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -94,8 +98,10 @@ export default function CreateAwardPage() {
               <div className="pt-4">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 shadow-xl shadow-slate-200 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                  disabled={isSubmitting || isRedirecting}
+                  className={`w-full py-5 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 ${
+                    isRedirecting ? "bg-emerald-600 shadow-emerald-200" : "bg-slate-900 hover:bg-slate-800 shadow-slate-200"
+                  }`}
                 >
                   {isSubmitting ? (
                     <>
@@ -105,6 +111,14 @@ export default function CreateAwardPage() {
                       </svg>
                       Processing...
                     </>
+                  ) : isRedirecting ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Refreshing List...
+                    </>
                   ) : "Submit Proposal"}
                 </button>
               </div>
@@ -112,6 +126,16 @@ export default function CreateAwardPage() {
           </div>
         </div>
       </main>
+
+      {/* Revalidating Overlay */}
+      {isRedirecting && (
+        <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-50 flex items-center justify-center animate-in fade-in duration-500">
+          <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="font-black text-slate-900 tracking-tight">Updating Awards...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

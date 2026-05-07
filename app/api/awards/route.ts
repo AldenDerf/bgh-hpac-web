@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/utils/db";
 import { decrypt } from "@/utils/auth";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 // GET all awards (with optional status filter)
 export async function GET(request: Request) {
@@ -77,6 +78,9 @@ export async function POST(request: Request) {
         status: "PENDING", // Default
       },
     });
+
+    revalidatePath("/hpac/activities/health-worker-week-2026/awards");
+    revalidatePath("/health_worker_week_2026");
 
     return NextResponse.json(award);
   } catch (error) {
