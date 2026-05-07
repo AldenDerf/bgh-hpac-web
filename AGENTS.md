@@ -11,5 +11,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
     - Authorization (Check if the user owns the data/has the role).
 3.  **Data Scrubbing:** Never return raw database objects. Explicitly select fields to prevent leaking internal metadata or sensitive IDs.
 4.  **No Public Secrets:** Any env var with `NEXT_PUBLIC_` is public knowledge. Strict ban on sensitive keys in public envs.
+5.  **Data Preservation:** NEVER perform bulk deletions (e.g., `deleteMany({})`) or clear entire tables unless explicitly requested by the user. Always use `upsert` or target specific records by ID to preserve existing data during seeding or migrations.
 
 <!-- END:nextjs-agent-rules -->
