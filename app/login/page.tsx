@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleContinue = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +23,11 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employeeId, password: showPassword ? password : null }),
+        body: JSON.stringify({ 
+          employeeId, 
+          password: showPassword ? password : null,
+          callbackUrl 
+        }),
       });
 
       const data = await res.json();
@@ -134,5 +141,17 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin h-8 w-8 text-blue-600" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

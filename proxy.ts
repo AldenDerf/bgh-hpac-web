@@ -14,7 +14,9 @@ export async function proxy(request: NextRequest) {
 
   if (isAdminRoute || isHpacRoute || isEmployeeRoute || isHealthWorkerWeekRoute) {
     if (!session) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      const url = new URL("/login", request.url);
+      url.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(url);
     }
 
     try {

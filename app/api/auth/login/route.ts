@@ -4,7 +4,7 @@ import { verifyPassword, login } from "@/utils/auth";
 
 export async function POST(request: Request) {
   try {
-    const { employeeId, password } = await request.json();
+    const { employeeId, password, callbackUrl } = await request.json();
 
     // 1. Check if the ID exists in the bgh_employees table
     const employee = await prisma.employee.findUnique({
@@ -44,11 +44,11 @@ export async function POST(request: Request) {
       userType = userRole === "STANDARD" ? "EMPLOYEE" : userRole as any;
       
       // All roles now redirect to the root dashboard
-      redirect = "/";
+      redirect = callbackUrl || "/";
     } else {
       // Employee User (Employee but not in User table)
       userType = "EMPLOYEE";
-      redirect = "/";
+      redirect = callbackUrl || "/";
     }
 
     // 3. Create Session
