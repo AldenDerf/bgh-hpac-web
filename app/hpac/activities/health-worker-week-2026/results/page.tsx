@@ -67,9 +67,12 @@ export default function NominationResultsPage() {
 
             <div className="bg-slate-900 p-8 rounded-[2rem] shadow-2xl text-white relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Participation Rate</p>
-              <h2 className="text-5xl font-black text-white">Live</h2>
-              <p className="text-xs text-slate-400 mt-2 font-medium">Updating as votes come in</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Full Completion</p>
+              <h2 className="text-5xl font-black text-white">
+                {summary?.finishedAllCount}
+                <span className="text-xl text-slate-500 ml-2">/ {summary?.uniqueVoters}</span>
+              </h2>
+              <p className="text-xs text-slate-400 mt-2 font-medium">Participants who finished all {summary?.approvedAwardsCount} categories</p>
             </div>
           </div>
 

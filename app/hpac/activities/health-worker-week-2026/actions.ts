@@ -79,9 +79,26 @@ export async function getNominationSummary() {
       };
     });
 
+    // 5. Total Approved Awards Count
+    const approvedAwardsCount = await prisma.award.count({
+      where: { status: "APPROVED" }
+    });
+
+    // 6. Users who finished all nominations
+    const votersWithCounts = await prisma.nomination.groupBy({
+      by: ['nominatorId'],
+      _count: {
+        awardId: true
+      }
+    });
+
+    const finishedAllCount = votersWithCounts.filter(v => v._count.awardId === approvedAwardsCount).length;
+
     return {
       totalNominations,
       uniqueVoters: uniqueVoters.length,
+      finishedAllCount,
+      approvedAwardsCount,
       sectionCounts: Object.entries(sectionCounts).map(([section, count]) => ({ section, count })),
       resultsPerAward,
     };
