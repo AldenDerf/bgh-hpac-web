@@ -20,7 +20,7 @@ interface Employee {
 export default function HealthWorkerWeekPage() {
   const [approvedAwards, setApprovedAwards] = useState<Award[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [userNominatedAwardIds, setUserNominatedAwardIds] = useState<string[]>([]);
+  const [userNominations, setUserNominations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isNominalModalOpen, setIsNominalModalOpen] = useState(false);
   const [selectedAward, setSelectedAward] = useState<Award | null>(null);
@@ -38,7 +38,7 @@ export default function HealthWorkerWeekPage() {
       ]);
       setApprovedAwards(awardsRes);
       setEmployees(empData);
-      setUserNominatedAwardIds(nominationsData);
+      setUserNominations(nominationsData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -58,8 +58,8 @@ export default function HealthWorkerWeekPage() {
     setIsNominalModalOpen(true);
   };
 
-  const availableAwards = approvedAwards.filter(a => !userNominatedAwardIds.includes(a.id));
-  const completedAwards = approvedAwards.filter(a => userNominatedAwardIds.includes(a.id));
+  const availableAwards = approvedAwards.filter(a => !userNominations.some(n => n.awardId === a.id));
+  const completedAwards = approvedAwards.filter(a => userNominations.some(n => n.awardId === a.id));
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -150,23 +150,37 @@ export default function HealthWorkerWeekPage() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {completedAwards.map((award) => (
-                      <div key={award.id} className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 transition-all">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            <h4 className="font-bold text-slate-900 text-sm">{award.name}</h4>
-                          </div>
-                          <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">{award.description}</p>
-                          <div className="mt-2 inline-flex items-center gap-1.5 text-emerald-600 text-[9px] font-black uppercase tracking-widest">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-                              <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-                            </svg>
-                            Submission Recorded
+                    {completedAwards.map((award) => {
+                      const nomination = userNominations.find(n => n.awardId === award.id);
+                      return (
+                        <div key={award.id} className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 transition-all">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                                <h4 className="font-bold text-slate-900 text-sm">{award.name}</h4>
+                              </div>
+                              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">RECORDED</span>
+                            </div>
+                            
+                            <div className="mt-1 p-3 bg-white/50 rounded-xl border border-emerald-100/50">
+                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Nominated</p>
+                              <p className="text-sm font-bold text-slate-900">
+                                {nomination?.nominee?.firstname} {nomination?.nominee?.lastname}
+                              </p>
+                              {nomination?.reason && (
+                                <>
+                                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-3 mb-1">Reason</p>
+                                  <p className="text-xs text-slate-600 italic leading-relaxed">
+                                    "{nomination.reason}"
+                                  </p>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}

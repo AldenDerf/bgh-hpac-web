@@ -60,11 +60,17 @@ export async function getUserNominations() {
   if (!session) return [];
 
   try {
-    const nominations = await prisma.nomination.findMany({
+    return await prisma.nomination.findMany({
       where: { nominatorId: session.user.employeeId },
-      select: { awardId: true }
+      include: {
+        nominee: {
+          select: {
+            firstname: true,
+            lastname: true,
+          }
+        }
+      }
     });
-    return nominations.map(n => n.awardId);
   } catch (error) {
     console.error("Failed to fetch user nominations:", error);
     return [];
