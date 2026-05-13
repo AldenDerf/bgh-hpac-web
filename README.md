@@ -14,7 +14,7 @@ This project is built using modern web standards to ensure high performance, sec
 - **State Management & Mutations:** [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) for all database changes with automatic `revalidatePath` cache purging.
 - **Security:** 
   - **Middleware Enforced:** Custom `proxy.ts` middleware for role-based route protection and mandatory security redirects.
-  - **Auth:** JWT-based sessions (Jose) with secure, http-only cookies.
+  - **Auth:** JWT-based sessions (Jose) with secure, http-only cookies and `callbackUrl` support for seamless post-login redirection.
   - **Hashing:** `bcryptjs` for secure password storage.
 - **Design:** Vanilla CSS with a focus on "Glassmorphism," micro-animations, and high-contrast accessibility.
 
@@ -37,6 +37,12 @@ This project is built using modern web standards to ensure high performance, sec
 *   **First-Login Enforcement:** New users or those with reset passwords are automatically intercepted by middleware and forced to a mandatory `/change-password` route.
 *   **Validation:** Enforces a minimum 8-character password policy with live "Show Password" toggles.
 *   **Success Feedback:** A premium success screen confirms the update before redirecting the user back to the login page for a fresh, secure session.
+
+### 4. Health Worker's Week 2026 (`/health_worker_week_2026`)
+*   **Peer Recognition:** An interactive portal where employees can nominate colleagues for specialized award categories.
+*   **Smart Categorization:** Awards are dynamically split into "Available" and "Completed" sections. Once a vote is cast, it moves to the personal "Your Nominations" archive.
+*   **Transparency:** Users can review their cast votes, including the nominee's name, the award description, and the specific reason provided for the nomination.
+*   **Full-Width Experience:** Optimized layout for a focused, distraction-free recognition workflow.
 
 ---
 
@@ -72,6 +78,7 @@ When working on this codebase, adhere to these standards:
 ## 📁 Project Structure Highlights
 
 - `/app/admin/users/actions.ts`: Contains all server-side logic for the User Management portal.
+- `/app/health_worker_week_2026`: The core recognition portal logic and nomination workflows.
 - `/proxy.ts`: The central security gateway enforcing authentication and password policies.
 - `/utils/db.ts`: Singleton Prisma client initialization with PostgreSQL adapter support.
 - `/utils/auth.ts`: Session management, encryption, and password hashing utilities.
