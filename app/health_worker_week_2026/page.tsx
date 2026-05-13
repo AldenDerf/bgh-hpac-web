@@ -92,7 +92,7 @@ export default function HealthWorkerWeekPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12">
             
             {/* PRIMARY HIGHLIGHT: Recognition (col-span 7) */}
-            <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+            <div className="lg:col-span-12 space-y-6 sm:space-y-8">
               <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-2xl shadow-blue-100/50 border border-slate-100 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 sm:p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
                   <svg className="w-24 h-24 sm:w-32 sm:h-32 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -146,39 +146,7 @@ export default function HealthWorkerWeekPage() {
               </div>
             </div>
 
-            {/* SECONDARY HIGHLIGHT: Event Schedule (col-span 5) */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-xl border border-slate-100 h-full">
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900">Event Schedule</h3>
-                  <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Week 2026</span>
-                </div>
-                
-                <div className="space-y-6">
-                  {[
-                    { day: "Mon", title: "Kick-off Ceremony", time: "8:00 AM", desc: "Breakfast and opening remarks at the Main Hall." },
-                    { day: "Tue", title: "Sports & Wellness", time: "3:00 PM", desc: "Inter-departmental matches and yoga." },
-                    { day: "Wed", title: "Wellness Workshop", time: "1:00 PM", desc: "Mental health and resilience training." },
-                    { day: "Thu", title: "Cultural Night", time: "6:00 PM", desc: "Talent showcase and staff dinner." },
-                    { day: "Fri", title: "Recognition Gala", time: "7:00 PM", desc: "Grand awards night and celebration." },
-                  ].map((item, i) => (
-                    <div key={i} className="flex gap-4 sm:gap-6 group">
-                      <div className="flex flex-col items-center">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-black text-xs sm:text-sm group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                          {item.day}
-                        </div>
-                        {i < 4 && <div className="w-0.5 h-full bg-slate-100 my-1"></div>}
-                      </div>
-                      <div className="pb-4">
-                        <p className="text-[10px] font-bold text-blue-500 mb-1">{item.time}</p>
-                        <h4 className="font-bold text-slate-900 text-sm sm:text-base group-hover:text-blue-600 transition-colors leading-tight">{item.title}</h4>
-                        <p className="text-[11px] text-slate-500 mt-1 leading-snug">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+
           </div>
 
           {/* Footer Gallery Placeholder */}
