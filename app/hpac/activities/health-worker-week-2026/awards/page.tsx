@@ -98,21 +98,25 @@ export default function HpacAwardsPage() {
               </div>
             </div>
 
-            {/* Placeholder for Results */}
-            <div className="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl shadow-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl"></div>
-              <div className="relative z-10">
-                <h3 className="text-xl font-bold mb-2">Award Results</h3>
-                <p className="text-slate-400 text-sm max-w-sm">
-                  Final results and statistics for the Health Worker Week 2026 awards will be generated here after voting is complete.
-                </p>
-              </div>
-              <div className="shrink-0 relative z-10">
-                <div className="h-14 w-14 bg-white/10 rounded-2xl flex items-center justify-center">
-                  <span className="text-2xl">📊</span>
+            {/* Results Link */}
+            <Link href="/hpac/activities/health-worker-week-2026/results" className="group block">
+              <div className="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl shadow-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden transition-all hover:scale-[1.02] active:scale-95 hover:shadow-blue-200/20">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold mb-2">View Nomination Results</h3>
+                  <p className="text-slate-400 text-sm max-w-sm">
+                    Access live statistics, participation rates by section, and final nominee standings for all categories.
+                  </p>
+                </div>
+                <div className="shrink-0 relative z-10">
+                  <div className="h-14 w-14 bg-white/10 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0h.5m-1.5 0h-10.5m.5 0-1.5 0H2" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </main>
