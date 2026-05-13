@@ -74,6 +74,7 @@ export async function getNominationSummary() {
       return {
         id: award.id,
         name: award.name,
+        description: award.description,
         totalVotes: award.nominations.length,
         topNominees: Object.values(nomineeStats).sort((a, b) => b.count - a.count),
       };

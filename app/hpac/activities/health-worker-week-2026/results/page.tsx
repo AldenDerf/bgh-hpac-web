@@ -108,11 +108,11 @@ export default function NominationResultsPage() {
               {summary?.resultsPerAward.map((award: any) => (
                 <div key={award.id} className="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
                   <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-50">
-                    <div>
+                    <div className="flex-1">
                       <h3 className="text-2xl font-black text-slate-900">{award.name}</h3>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Award Category Results</p>
+                      <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed max-w-2xl">{award.description}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right shrink-0 ml-4">
                       <span className="text-2xl font-black text-blue-600">{award.totalVotes}</span>
                       <p className="text-[10px] font-black text-slate-400 uppercase">Total Votes</p>
                     </div>
