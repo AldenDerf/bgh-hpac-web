@@ -79,7 +79,7 @@ export default function HealthWorkerWeekPage() {
               Celebrating Our Heroes
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 tracking-tight leading-tight px-2">
-              Health Worker Week <span className="text-blue-600">2026</span>
+              Health Worker's Week <span className="text-blue-600">2026</span>
             </h1>
             <p className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium px-4">
               Join us in honoring those who dedicate their lives to care.
