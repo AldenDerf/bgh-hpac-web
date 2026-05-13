@@ -163,6 +163,10 @@ export default function HealthWorkerWeekPage() {
                               <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">RECORDED</span>
                             </div>
                             
+                            <p className="text-[11px] text-slate-500 leading-relaxed px-1 line-clamp-2">
+                              {award.description}
+                            </p>
+                            
                             <div className="mt-1 p-3 bg-white/50 rounded-xl border border-emerald-100/50">
                               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Nominated</p>
                               <p className="text-sm font-bold text-slate-900">
