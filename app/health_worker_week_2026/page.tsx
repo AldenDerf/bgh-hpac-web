@@ -58,10 +58,8 @@ export default function HealthWorkerWeekPage() {
     setIsNominalModalOpen(true);
   };
 
-  const filteredEmployees = employees.filter(e => 
-    `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase()) ||
-    e.section.toLowerCase().includes(search.toLowerCase())
-  );
+  const availableAwards = approvedAwards.filter(a => !userNominatedAwardIds.includes(a.id));
+  const completedAwards = approvedAwards.filter(a => userNominatedAwardIds.includes(a.id));
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -110,40 +108,68 @@ export default function HealthWorkerWeekPage() {
                 <div className="space-y-4">
                   {isLoading ? (
                     <div className="py-10 text-center text-slate-400 font-medium">Loading awards...</div>
-                  ) : approvedAwards.length === 0 ? (
+                  ) : availableAwards.length === 0 ? (
                     <div className="py-10 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-                      <p className="text-slate-500 font-bold">Awards are currently being finalized.</p>
-                      <p className="text-xs text-slate-400 mt-1">Check back soon to start nominating!</p>
+                      <p className="text-slate-500 font-bold">You've nominated in all available categories!</p>
+                      <p className="text-xs text-slate-400 mt-1">Thank you for your participation.</p>
                     </div>
                   ) : (
-                    approvedAwards.map((award) => (
+                    availableAwards.map((award) => (
                       <div key={award.id} className="bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 rounded-2xl p-5 sm:p-6 transition-all group/award">
                         <div className="flex justify-between items-start gap-4">
                           <div className="space-y-1">
                             <h4 className="font-bold text-slate-900 group-hover/award:text-blue-700 transition-colors">{award.name}</h4>
                             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{award.description}</p>
                           </div>
-                          {userNominatedAwardIds.includes(award.id) ? (
-                            <div className="shrink-0 flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-xl border border-emerald-100 shadow-sm">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-                                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-                              </svg>
-                              VOTED
-                            </div>
-                          ) : (
-                            <button 
-                              onClick={() => handleNominate(award)}
-                              className="shrink-0 px-4 py-2 bg-white text-blue-600 text-xs font-black rounded-xl border border-slate-200 shadow-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all active:scale-95"
-                            >
-                              NOMINATE
-                            </button>
-                          )}
+                          <button 
+                            onClick={() => handleNominate(award)}
+                            className="shrink-0 px-4 py-2 bg-white text-blue-600 text-xs font-black rounded-xl border border-slate-200 shadow-sm hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all active:scale-95"
+                          >
+                            NOMINATE
+                          </button>
                         </div>
                       </div>
                     ))
                   )}
                 </div>
               </div>
+
+              {/* COMPLETED NOMINATIONS SECTION */}
+              {completedAwards.length > 0 && (
+                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-xl border border-slate-100 relative overflow-hidden">
+                  <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4.13-5.689Z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900">Your Nominations</h3>
+                      <p className="text-xs sm:text-sm text-slate-500 font-medium">Categories you've already voted for.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {completedAwards.map((award) => (
+                      <div key={award.id} className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5 transition-all">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                            <h4 className="font-bold text-slate-900 text-sm">{award.name}</h4>
+                          </div>
+                          <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">{award.description}</p>
+                          <div className="mt-2 inline-flex items-center gap-1.5 text-emerald-600 text-[9px] font-black uppercase tracking-widest">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                              <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                            </svg>
+                            Submission Recorded
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
 
@@ -232,10 +258,16 @@ export default function HealthWorkerWeekPage() {
                         </div>
                       </div>
 
-                      <div className="bg-slate-50 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-slate-100 overflow-hidden">
+                    <div className="bg-slate-50 rounded-[1.5rem] sm:rounded-[2rem] border-2 border-slate-100 overflow-hidden">
                         <div className="max-h-40 sm:max-h-48 overflow-y-auto p-2 space-y-1 custom-scrollbar">
-                          {filteredEmployees.length > 0 ? (
-                            filteredEmployees.map((emp) => (
+                          {employees.filter(e => 
+                            `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase()) ||
+                            e.section.toLowerCase().includes(search.toLowerCase())
+                          ).length > 0 ? (
+                            employees.filter(e => 
+                              `${e.firstname} ${e.lastname}`.toLowerCase().includes(search.toLowerCase()) ||
+                              e.section.toLowerCase().includes(search.toLowerCase())
+                            ).map((emp) => (
                               <label 
                                 key={emp.employeeId} 
                                 className={`flex items-center justify-between p-3.5 sm:p-4 rounded-xl cursor-pointer transition-all border-2 ${
